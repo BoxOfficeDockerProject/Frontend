@@ -1,4 +1,4 @@
-import { useEffect, React, useState } from 'react';
+import { useEffect, React } from 'react';
 import axios from'axios';
 import default_Img from './images/error.png';
 
@@ -67,7 +67,7 @@ export default function Lists({data,setData,user}) {
             });
         }
         getBoxOffice();
-    }, [targetDT]);
+    }, [targetDT, setData]);
 
     const onErrorImg = (e) => {
         e.target.src = default_Img;
@@ -86,16 +86,19 @@ export default function Lists({data,setData,user}) {
                     <p className="font-medium w-full text-[13pt]">{item.subtitle}</p>
                     <p className="font-medium text-[#888888] text-[12pt] mt-1">{`${item.openDt} 개봉`}</p>
                     
-                    <div>
-                    <svg width="20" height="20" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="inline-block align-middle mx-[0px]">
-                        <path d="M10 9C11.6569 9 13 7.65685 13 6C13 4.34315 11.6569 3 10 3C8.34315 3 7 4.34315 7 6C7 7.65685 8.34315 9 10 9Z" fill="#888888"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.5C16 12.309 13.314 10 10 10C6.686 10 4 12.309 4 15.5L4.002 17C4.002 17.2652 4.10736 17.5196 4.29489 17.7071C4.48243 17.8946 4.73678 18 5.002 18H15C15.2652 18 15.5196 17.8946 15.7071 17.7071C15.8946 17.5196 16 17.2652 16 17V15.5Z" fill="#888888"/>
-                    </svg>
                     
-                    <span className="font-medium text-[#888888] text-[12pt] mt-1 align-middle">
-                    {`${Number(item.audiAcc).toLocaleString('ko-KR')}`}</span>
-                    </div>
-                    
+                    {
+                        Number(item.audiAcc) === 0 ||isNaN(item.audiAcc)
+                        ?<p></p>
+                        :<div>
+                        <svg width="20" height="20" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="inline-block align-middle mx-[0px]">
+                            <path d="M10 9C11.6569 9 13 7.65685 13 6C13 4.34315 11.6569 3 10 3C8.34315 3 7 4.34315 7 6C7 7.65685 8.34315 9 10 9Z" fill="#888888"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.5C16 12.309 13.314 10 10 10C6.686 10 4 12.309 4 15.5L4.002 17C4.002 17.2652 4.10736 17.5196 4.29489 17.7071C4.48243 17.8946 4.73678 18 5.002 18H15C15.2652 18 15.5196 17.8946 15.7071 17.7071C15.8946 17.5196 16 17.2652 16 17V15.5Z" fill="#888888"/>
+                        </svg>
+                        <span className="font-medium text-[#888888] text-[12pt] mt-1 align-middle">
+                        {`${Number(item.audiAcc).toLocaleString('ko-KR')}`}</span>
+                        </div>
+                    }
                     <div className="mt-1">
                         <span className="text-[#FFD177] text-[16pt]">★</span>
                         <span className="font-bold text-[14pt]"> {item.rating}</span>

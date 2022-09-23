@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Fav() {
   
-  const [list,setList] = useState(0);
   const [fav, setFav] =useState([]);
   // 1. useLocation 훅 취득
     const location = useLocation();
@@ -21,7 +20,6 @@ export default function Fav() {
          let favList = response.data;
          console.log(favList);
          setFav(favList);
-         setList(favList.length);
         }).catch(function (error) {
           alert('Fail to Load');
         });

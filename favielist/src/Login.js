@@ -29,7 +29,7 @@ export default function Login() {
         })
         .then(function (response) {
              let result = response.data;
-             if(Object.keys(result).length == 0){
+             if(Object.keys(result).length === 0){
                 alert('Does not exist..');
              }else{
                 navigate('/main', 

@@ -1,5 +1,5 @@
 import {React, useState} from 'react'
-import useNavigate from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
 
 export default function Header({setData, user}) {
@@ -42,7 +42,8 @@ export default function Header({setData, user}) {
             "title":item.title.replace("<b>","").replace("</b>",""),
             "subtitle":item.subtitle,   
             "openDt":item.pubDate,
-            "rating":item.userRating
+            "rating":item.userRating,
+            "audiAcc":0
           }
         }
        
