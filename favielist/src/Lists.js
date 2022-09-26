@@ -70,7 +70,7 @@ export default function Lists({data,setData,user}) {
         })
         .then(function (response) {
              console.log(response);
-             alert(`${item.title} 가 관심 영화에 등록되었습니다!`);
+             alert(`${item.title}(이)가 관심 영화에 등록되었습니다!`);
         }).catch(function (error) {
             alert("이미 보관 중인 영화입니다!");
         });
