@@ -1,13 +1,14 @@
 // src/setupProxy.js
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
+const MOVIE_API_ADDR = process.env.API_IP
+const BACK_URI = `http://${MOVIE_API_ADDR}`
 module.exports = function(app) {
 
   //CORS ERROR
     app.use(
         '/movie',
         createProxyMiddleware({
-          target: 'http://localhost:8080',
+          target: BACK_URI,
           changeOrigin: true,
         })
       );
@@ -15,7 +16,7 @@ module.exports = function(app) {
       app.use(
         '/user',
         createProxyMiddleware({
-          target: 'http://localhost:8080',
+          target: BACK_URI,
           changeOrigin: true,
         })
       );
