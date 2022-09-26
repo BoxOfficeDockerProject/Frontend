@@ -4,14 +4,60 @@ import default_Img from './images/error.png';
 
 export default function Lists({data,setData,user}) {
     
-    const KEY = 'ac733e4361119585d5f69a529226d016';
+    const kobisUrl = 'https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json';
+    const kobisApiKey = 'kobisApiKey';
+    const NaverApiId = "NaverApiId";
+    const NaverApiSecret = "NaverApiSecret";
+
     var today = new Date();
     var yesterday = new Date(today.setDate(today.getDate() - 7));
-    let targetDT = yesterday.getFullYear()+(yesterday.getMonth()+1).toString().padStart(2,0)+(yesterday.getDate()).toString().padStart(2,0);
-    
+    let targetDT = yesterday.getFullYear()+(yesterday.getMonth()+1)
+    .toString().padStart(2,0)+(yesterday.getDate()).toString().padStart(2,0);
+
+    useEffect(() => {
+        const getMovies = async(movie) => {
+            const json = await (
+                await fetch(`/v1/search/movie.json?query=${movie.movieNm}`, {
+                    method: 'GET',
+                    headers: {
+                        "X-Naver-Client-Id":`${NaverApiId}`,
+                        "X-Naver-Client-Secret":`${NaverApiSecret}`
+                    }
+                })
+            ).json();
+            return {
+                "rank":movie.rank,
+                "poster":json.items[0].image,
+                "movieCd":movie.movieCd,
+                "title":movie.movieNm,
+                "subtitle":json.items[0].subtitle,   
+                "openDt":movie.openDt.replaceAll("-","."),
+                "audiAcc":movie.audiAcc,
+                "rating":json.items[0].userRating,
+                "like":false   
+            }
+        }
+        
+        const getBoxOffice = async() => {
+            const response = await(await (
+                await fetch(
+                    `${kobisUrl}?key=${kobisApiKey}&targetDt=${targetDT}`
+                )
+            ).json()).boxOfficeResult.dailyBoxOfficeList;
+            const boxOffice = response.map((movie) => getMovies(movie));
+            
+            await Promise.all(boxOffice).then((result) => {
+                //console.log(result);
+                setData(result);
+            });
+        }
+
+        getBoxOffice();
+
+    }, [targetDT, setData]);
+
+
     const btnHeart = (item) => {
-       
-        //console.log(item);
         axios.post(`/movie?userId=${user.userId}`, {
             movieCd:`${item.movieCd}`,
             movieNm: `${item.title}`,
@@ -30,48 +76,9 @@ export default function Lists({data,setData,user}) {
         });
     }
 
-    useEffect(() => {
-        const getMovies = async(movie) => {
-            const json = await (
-                await fetch(`/v1/search/movie.json?query=${movie.movieNm}`, {
-                    method: 'GET',
-                    headers: {
-                        "X-Naver-Client-Id":"rkuFsJw7BejTzImF1dlV",
-                        "X-Naver-Client-Secret":"vjda43t2Pd"
-                    }
-                })
-            ).json();
-            return {
-                "rank":movie.rank,
-                "poster":json.items[0].image,
-                "movieCd":movie.movieCd,
-                "title":movie.movieNm,
-                "subtitle":json.items[0].subtitle,   
-                "openDt":movie.openDt.replaceAll("-","."),
-                "audiAcc":movie.audiAcc,
-                "rating":json.items[0].userRating,
-                "like":false   
-            }
-        }
-        const getBoxOffice = async() => {
-            const response = await(await (
-                await fetch(
-                    `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KEY}&targetDt=${targetDT}`
-                )
-            ).json()).boxOfficeResult.dailyBoxOfficeList;
-            const boxOffice = response.map((movie) => getMovies(movie));
-            
-            await Promise.all(boxOffice).then((result) => {
-                //console.log(result);
-                setData(result);
-            });
-        }
-        getBoxOffice();
-    }, [targetDT, setData]);
-
     const onErrorImg = (e) => {
         e.target.src = default_Img;
-      }
+    }
     
 
     return (
