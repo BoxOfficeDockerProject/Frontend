@@ -51,7 +51,6 @@ export default function Lists({data,setData,user}) {
                 setData(result);
             });
         }
-
         getBoxOffice();
 
     }, [targetDT, setData]);
